@@ -1,0 +1,40 @@
+{
+  "name": "mpa",
+  "version": "1.0.0",
+  "description": "Multi-Page Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack && node dev-server.js",
+    "watch": "webpack --watch --colors",
+    "build": "webpack --progress --colors"
+  },
+  "author": "Vincent",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.5",
+    "eventsource-polyfill": "^0.9.6",
+    "express": "^4.15.4",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "glob": "^7.1.2",
+    "html-webpack-plugin": "^2.30.1",
+    "http-proxy-middleware": "^0.17.4",
+    "node-sass": "^4.5.3",
+    "open-browser-webpack-plugin": "0.0.5",
+    "opn": "^5.1.0",
+    "resolve-url-loader": "^2.1.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.5.5",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-dev-server": "^2.7.1",
+    "webpack-hot-middleware": "^2.18.2"
+  }
+}
