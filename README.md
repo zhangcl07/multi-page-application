@@ -13,10 +13,11 @@ src/
   |- common/      项目中自己写或依赖的各种公共方法、配置、样式
   |- commponents/ 组件
   |- pages/       多页面逻辑代码
-      |- page
-          |- index.html 独立模版，相当于一个frame框架
-          |- main.js    页面逻辑代码，import依赖组件，页面模版、Vue实例，类似 `*.vue` 文件构造
-          |- main.scss  页面单独的css，可@import公共的common.scss
+      |- page/ 页面
+          |- index.html 独立模版，相当于一个frame框架，可选
+          |- main.js    页面逻辑代码，页面入口文件
+          |- main.vue   vue组建
+          |- main.scss  页面单独的css
 ```
 ## 命令
 - ```npm start``` // 开发模式
