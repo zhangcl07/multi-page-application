@@ -3,8 +3,9 @@ var webpack = require('webpack'),
     path = require('path'),
     CopyWebpackPlugin = require('copy-webpack-plugin'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
-    // ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+    ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin'),
+    vueLoaderConfig = require('./vue-loader.conf');
 
 function pathJoin (dir) {
   return path.join(__dirname, './', dir)
@@ -21,29 +22,36 @@ var webpackConfig = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['.js', '.scss', '.html'],
+    extensions: ['.js', '.vue', '.json'],
     alias: {
+      vue: 'vue/dist/vue.js',
       '@': pathJoin('src')
     }
   },
   module: {
     loaders: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: vueLoaderConfig.cssLoaders({
+          loaders: {
+            sourceMap: true,
+            extract: true
+          }
+        })
+      },
+      {
         test: /\.scss$/,
-        loader: 'style-loader!css-loader!sass-loader',
-        // use: ExtractTextPlugin.extract({
-        //   fallback: 'style-loader',
-        //   use: ['css-loader', 'sass-loader']
-        // })
+        // loader: 'style-loader!css-loader!sass-loader',
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
       },
       {
         test: /\.js$/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env'],
-            plugins: ["transform-runtime"]
-          }
+          loader: 'babel-loader'
         },
         exclude: /node_modules/
       },
@@ -62,13 +70,23 @@ var webpackConfig = {
       { from: './src/basic', to: './basic'}
     ]),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "commons",
-      filename: "./basic/commons.js"
+      name: 'commons',
+      filename: './basic/commons.js',
+      minChunks: function (module, count) {
+        // 返回当前模块是否有从node_modules内引入的
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, './node_modules')
+          ) === 0
+        )
+      }
     }),
     new webpack.HotModuleReplacementPlugin(),
-    // new ExtractTextPlugin("./css/style.css",{
-    //   // allChunks: true
-    // }),
+    new ExtractTextPlugin("./css/style.css",{
+      allChunks: true
+    }),
     new FriendlyErrorsWebpackPlugin()
   ]
   // ,
@@ -92,10 +110,14 @@ function getEntries(globPath) {
   return entries;
 }
 
-var entries = getEntries('src/pages/**/*.js');
+var entries = getEntries('src/pages/**/main.js');
 
 Object.keys(entries).forEach(function(name) {
   webpackConfig.entry[name] = [entries[name]];
+  var commonChunks = ['commons', name];
+  // if(process.env.npm_lifecycle_event !== 'build'){
+  //   commonChunks.push()
+  // }
   // 每个页面生成一个html
   var path = name.split('/'),
       plugin = new HtmlWebpackPlugin({
@@ -106,7 +128,13 @@ Object.keys(entries).forEach(function(name) {
         // 自动将引用插入html
         inject: true,
         // 每个html引用的js模块，也可以在这里加上vendor等公用模块
-        chunks: [name]
+        chunks: commonChunks,
+        minify: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeAttributeQuotes: true
+        },
+        chunksSortMode: 'dependency'
       });
   webpackConfig.plugins.push(plugin);
 });

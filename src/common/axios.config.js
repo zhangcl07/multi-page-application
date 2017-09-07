@@ -1,5 +1,6 @@
+import Axios from 'axios'
 // 配置接口调用的基本信息
-Vue.prototype.$http = axios.create({
+export default Axios.create({
   // baseURL: '',
   timeout: 6000,
   // headers: {},

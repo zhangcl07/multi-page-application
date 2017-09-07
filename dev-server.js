@@ -57,7 +57,7 @@ const uri = devConfig.host+':'+devConfig.port
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
   console.log('> Listening at '+ uri +' \n')
-  // opn(uri)
+  opn(uri)
 })
 
 app.listen(devConfig.port);

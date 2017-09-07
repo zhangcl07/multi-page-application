@@ -1,16 +1,10 @@
+import Vue from 'vue'
+// import $http from '@/common/axios.config'
+import Hello from './main.vue'
 import '@/common/common.scss'
-import '@/common/axios.config'
 
-const TEMP = `
-  <div>
-    <p>{{txt}}</p>
-  </div>
-`
-
-new Vue({
-  el: '#app',
-  template: TEMP,
-  data: {
-    txt: 'Hello hello hello hello heeeeeeeeeeeello!!!'
-  }
+export default new Vue({
+  el: '#otherPage',
+  template: '<Hello/>',
+  components: { Hello }
 })
