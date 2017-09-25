@@ -11,9 +11,7 @@
     }
   }
 </script>
-<style>
-  body{
-    background: #ccc;
-    font-size: 30px;
-  }
+<style lang="scss">
+  @import "./main.scss";
 </style>
+

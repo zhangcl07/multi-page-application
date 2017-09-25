@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   margin: 0;
   padding: 0;
@@ -5,8 +6,11 @@ body {
   font-size:12px;
   line-height:1.5;
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale
+  -moz-osx-font-smoothing:grayscale;
 }
 [v-cloak] {
   display: none
+}
+h1 {
+  font-size: px2rem(30px)
 }

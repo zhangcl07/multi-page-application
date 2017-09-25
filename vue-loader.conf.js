@@ -1,17 +1,27 @@
+let ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 exports.cssLoaders = function (options) {
   options = options || {}
 
   var cssLoader = {
-    loader: 'css-loader',
-    options: {
-      minimize: true,
-      sourceMap: options.sourceMap
-    }
-  }
+      loader: 'css-loader',
+      options: {
+        minimize: true,
+        sourceMap: options.sourceMap
+      }
+    },
+    sassResourceLoader = {
+      loader: 'sass-resources-loader',
+      options: {
+        resources: options.resources
+      }
+    };
 
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
-    var loaders = [cssLoader]
+    const loaders = [
+      cssLoader
+    ]
     if (loader) {
       loaders.push({
         loader: loader + '-loader',
@@ -33,14 +43,31 @@ exports.cssLoaders = function (options) {
     }
   }
 
+  function generateSassResourceLoader() {
+    const loaders = [
+      cssLoader,
+      'sass-loader',
+      sassResourceLoader
+    ]
+    if (options.extract) {
+      return ExtractTextPlugin.extract({
+        use: loaders,
+        fallback: 'vue-style-loader'
+      })
+    } else {
+      return ['vue-style-loader'].concat(loaders)
+    }
+  }
+
+  // console.log(generateSassResourceLoader());
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
     // postcss: generateLoaders(),
     less: generateLoaders('less'),
-    sass: generateLoaders('sass', { indentedSyntax: true }),
-    scss: generateLoaders('sass'),
+    sass: generateSassResourceLoader(),
+    scss: generateSassResourceLoader(),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')
   }
-}
+};

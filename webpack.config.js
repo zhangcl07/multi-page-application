@@ -14,7 +14,7 @@ function pathJoin (dir) {
 var webpackConfig = {
   context: __dirname,
   entry: {
-    
+
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -33,19 +33,37 @@ var webpackConfig = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueLoaderConfig.cssLoaders({
-          loaders: {
-            sourceMap: true,
+        options: {
+          loaders: vueLoaderConfig.cssLoaders({
+            resource: ['./src/common/variables.scss'],
+            sourceMap: false,
             extract: true
-          }
-        })
+          })
+        }
       },
       {
         test: /\.scss$/,
-        // loader: 'style-loader!css-loader!sass-loader',
+        // loader: 'style-loader!css-loader!sass-loader'
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: ['css-loader', 'sass-loader']
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+                sourceMap: true
+              }
+            },
+            'sass-loader',
+            {
+              loader: 'sass-resources-loader',
+              options: {
+                resources: [
+                  path.resolve(__dirname, './src/common/variables.scss')
+                ]
+              },
+            }
+          ]
         })
       },
       {
@@ -66,9 +84,9 @@ var webpackConfig = {
   },
   plugins: [
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new CopyWebpackPlugin([
-      { from: './src/basic', to: './basic'}
-    ]),
+    // new CopyWebpackPlugin([
+    //   { from: './src/basic', to: './basic'}
+    // ]),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'commons',
       filename: './basic/commons.js',
@@ -84,7 +102,7 @@ var webpackConfig = {
       }
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin("./css/style.css",{
+    new ExtractTextPlugin("./css/style.[id].css",{
       allChunks: true
     }),
     new FriendlyErrorsWebpackPlugin()
