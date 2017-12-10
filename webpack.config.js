@@ -35,7 +35,7 @@ var webpackConfig = {
         loader: 'vue-loader',
         options: {
           loaders: vueLoaderConfig.cssLoaders({
-            resource: ['./src/common/variables.scss'],
+            resources: ['./src/common/variables.scss'],
             sourceMap: false,
             extract: true
           })
